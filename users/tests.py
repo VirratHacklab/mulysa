@@ -209,6 +209,13 @@ class TestNewApplicationHappyPathEmails(TestCase):
         )
 
     def test_emails(self):
+        self.assertEqual(len(mail.outbox), 1)  # user creation already sent "reset password email"
+
+        self.assertIn("Tämä viesti on lähetetty sinulle", mail.outbox[0].body, "Email reset hi text")
+        self.assertIn("http://example.com/www/reset/MQ/", mail.outbox[0].body, "Email reset link")
+        self.assertIn("Käyttäjätunnuksesi on", mail.outbox[0].body, "Your username")
+
+        # clear the test email box
         mail.outbox = []
 
         # create new application for our user
